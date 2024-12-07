@@ -9,7 +9,7 @@ import XCTest
 @testable import TriangleApp
 class TriangleAppTests: XCTestCase {
 
-  func testInvalidInputDetectTriangle() {
+  func testInvalidInputSides() {
     XCTAssertThrowsError(try detectTriangle(-1, -2, -3)) { error in
       XCTAssertEqual(error as? TriangleError, TriangleError.invalidInput)
     }
@@ -27,7 +27,11 @@ class TriangleAppTests: XCTestCase {
   }
 
   func testDetectRandomTriangle() {
-    XCTAssertEqual(try detectTriangle(3, 4, 5), "Segitiga Sembarang")
+    XCTAssertEqual(try detectTriangle(3, 5, 7), "Segitiga Sembarang")
+  }
+
+  func testDetectPythagorasTriangle() {
+    XCTAssertEqual(try detectTriangle(6, 8, 10), "Segitiga Siku-Siku")
   }
 
   func testInequalityTriangle() {
@@ -49,14 +53,14 @@ class TriangleAppTests: XCTestCase {
       throw TriangleError.invalidInput
     }
 
-    if sides[0] == sides[1] && sides[0] == sides[2] {
+    if sides[1] + sides[0] <= sides[2] {
+      throw TriangleError.inequalityInput
+    } else if sides[0] == sides[1] && sides[0] == sides[2] {
       return "Segitiga Sama Sisi"
     } else if sides[0] == sides[1] || sides[1] == sides[2] {
       return "Segitiga Sama Kaki"
-    } else if sides[1] + sides[0] <= sides[2] {
-      throw TriangleError.inequalityInput
-    } else if sides[2] - sides[1] <= sides[0] {
-      throw TriangleError.inequalityInput
+    } else if Double((sides[0] * sides[0] + sides[1] * sides[1])).squareRoot() == Double(sides[2]) {
+      return "Segitiga Siku-Siku"
     } else {
       return "Segitiga Sembarang"
     }
